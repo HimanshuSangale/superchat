@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { supabase } from "@/app/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 export default function Home() {
   const [showData, setShowData] = useState<any[] | null>(null);

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import Sidebar from "../components/sidebar";
 import Header from "../components/Header";
 import Chat from "../components/Chat";
@@ -6,18 +8,36 @@ import ChatHeader from "../components/ChatHeader";
 import ChatIntegration from "../components/ChatIntegrations";
 import { RiFolderDownloadFill } from "react-icons/ri";
 import { IoSearch, IoSend, IoFilterSharp } from "react-icons/io5";
+import { getAllProfiles } from "@/api/profile";
 
 import ChatArea from "./ChatArea"; // <-- New component
-
-const mockChats = Array.from({ length: 200 }, (_, index) => ({
-  id: index,
-  title: `Chat ${index + 1}`,
-  description: `This is chat ${index + 1}`,
-}));
+import ChatList from "./ChatList";
+import { Profile } from "@/types/supabase";
+import AuthRedirect from "@/Hooks/AuthRedirect";
 
 const Chats = () => {
+  const [activeChat, setActiveChat] = useState<string>("");
+  const [chats, setChats] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // AuthRedirect();
+    // Simulate fetching data from an API
+    const fetchChats = async () => {
+      // Replace this with your actual data fetching logic
+      const response = await getAllProfiles();
+      setChats(response);
+      setActiveChat(response[0]?.id || ""); // Set the first chat as active
+      setLoading(false);
+    };
+
+    fetchChats();
+  }, []);
+
+  console.log("active chat", activeChat);
   return (
     <div className="w-full flex">
+      <AuthRedirect />
       <Sidebar />
       <main className="flex-1 flex flex-col">
         <Header />
@@ -41,19 +61,23 @@ const Chats = () => {
                 <span>Filter</span>
               </button>
             </div>
-            <ul className="h-full flex flex-col w-full overflow-y-auto no-scrollbar">
-              {mockChats.map((chat) => (
-                <Chat
-                  key={chat.id}
-                  title={chat.title}
-                  description={chat.description}
-                />
-              ))}
-            </ul>
+            <ChatList
+              setActiveChat={setActiveChat}
+              activeChat={activeChat}
+              chats={chats}
+            />
           </div>
           {/* Main Chat Area */}
-          <ChatArea />
-          <ChatIntegration />
+          {activeChat ? (
+            <>
+              <ChatArea activeChat={activeChat} />
+              <ChatIntegration />
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-gray-400">
+              Select a chat to start messaging
+            </div>
+          )}
         </div>
       </main>
     </div>

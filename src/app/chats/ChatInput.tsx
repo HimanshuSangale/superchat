@@ -10,24 +10,16 @@ import { IoMdListBox } from "react-icons/io";
 import { FaMicrophone } from "react-icons/fa6";
 import Avatar from "../components/Avatar";
 import { BsChevronExpand } from "react-icons/bs";
-import { Message } from "../types/Message";
+import { Message } from "@/types/supabase";
 type ChatInputProps = {
-  onSend: React.Dispatch<React.SetStateAction<Message[]>>;
+  onSend: (message: string) => void | Promise<void>;
 };
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      content: message,
-      name: "You",
-      phone: "+00 00000 00000",
-      timestamp: new Date().toLocaleTimeString(),
-      isSender: true,
-    };
-    onSend((prev) => [...prev, newMessage]);
+    onSend(message);
     setMessage("");
   };
 

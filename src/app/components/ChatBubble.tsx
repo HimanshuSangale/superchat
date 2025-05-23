@@ -1,7 +1,7 @@
 // components/ChatBubble.tsx
 "use client";
 
-import { Message } from "../types/Message";
+import { Message, Profile } from "@/types/supabase";
 import { IoCheckmarkDone } from "react-icons/io5";
 import { FaTelegramPlane } from "react-icons/fa";
 
@@ -9,8 +9,25 @@ interface Props {
   message: Message;
 }
 
+import React, { useEffect, useState } from "react";
+import { getCurrentUserProfile } from "@/api/profile";
+
 export default function ChatBubble({ message }: Props) {
-  const { name, phone, content, timestamp, email, isSender } = message;
+  const { sender_id, content, created_at } = message;
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const profile = await getCurrentUserProfile();
+      setCurrentUser(profile);
+    };
+    fetchUser();
+  }, []);
+
+  // Wait until currentUser is loaded
+  if (!currentUser) return null;
+
+  const isSender = sender_id === currentUser.id;
 
   return (
     <div className={`flex ${isSender ? "justify-end" : "justify-start"} mb-2`}>
@@ -20,24 +37,26 @@ export default function ChatBubble({ message }: Props) {
         }`}
       >
         <div className="flex justify-between items-start mb-1 gap-10">
-          <span className="font-semibold text-sm text-green-700">{name}</span>
-          <span className="text-xs text-gray-500">{phone}</span>
+          <span className="font-semibold text-sm text-green-700">
+            {currentUser?.full_name}
+          </span>
+          <span className="text-xs text-gray-500">{currentUser?.email}</span>
         </div>
 
         <p className="mb-2 font-semibold">{content}</p>
 
         <div className="flex items-center justify-between text-xs text-gray-500">
-          {isSender && email ? (
+          {isSender && currentUser?.email ? (
             <div className="flex items-center gap-1">
               <FaTelegramPlane className="text-blue-500" size={12} />
-              <span>{email}</span>
+              <span>{currentUser.email}</span>
             </div>
           ) : (
             <span></span>
           )}
 
           <div className="flex items-center gap-1">
-            <span>{timestamp}</span>
+            <span>{created_at}</span>
             {isSender && (
               <IoCheckmarkDone className="text-blue-500" size={14} />
             )}

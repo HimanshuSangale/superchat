@@ -7,11 +7,18 @@ import Avatar from "./Avatar";
 type ChatProps = {
   title: string;
   description: string;
+  isActive?: boolean;
+  onClick?: () => void;
 };
 
-const Chat = ({ title, description }: ChatProps) => {
+const Chat = ({ title, description, onClick, isActive }: ChatProps) => {
   return (
-    <li className="bg-white w-full max-h-24 h-full list-none p-3 gap-2 flex items-start justify-start hover:bg-gray-100 border-b border-gray-100 cursor-pointer">
+    <li
+      className={`w-full max-h-24 h-full list-none p-3 gap-2 flex items-start justify-start hover:bg-gray-100 border-b border-gray-100 cursor-pointer ${
+        isActive ? "bg-gray-100" : "bg-white"
+      }`}
+      onClick={onClick}
+    >
       <Avatar
         src="/logo.png"
         alt="Chat"

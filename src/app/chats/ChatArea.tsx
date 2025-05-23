@@ -1,32 +1,97 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatHeader from "../components/ChatHeader";
 import ChatInput from "./ChatInput"; // You can create this as shown earlier
-import { Message } from "../types/Message";
 import ChatBubble from "../components/ChatBubble";
+import { getMessages, sendMessage } from "@/api/message";
+import { Message } from "@/types/supabase";
+import { getOrCreateChatId } from "@/api/chat";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
-const messages: Message[] = [
-  {
-    id: "1",
-    content: "CDERT",
-    name: "Roshnag Airtel",
-    phone: "+91 63646 47925",
-    timestamp: "09:49",
-    isSender: false,
-  },
-  {
-    id: "2",
-    content: "testing",
-    name: "Periskope",
-    phone: "+91 99718 44008",
-    email: "bharat@hashlabs.dev",
-    timestamp: "09:49",
-    isSender: true,
-  },
-];
+type ChatAreaProps = {
+  activeChat: string;
+};
 
-const ChatArea: React.FC = () => {
-  const [chats, setChats] = useState<Message[]>(messages);
+const ChatArea: React.FC<ChatAreaProps> = ({ activeChat }) => {
+  const [chats, setChats] = useState<Message[]>([]);
+  const [chatId, setChatId] = useState<string>("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchChat = async () => {
+      const currentUserId = await supabase.auth.getUser();
+      if (!currentUserId.data.user) {
+        router.push("/login");
+        return;
+      }
+      const chatId = await getOrCreateChatId(
+        currentUserId.data.user.id,
+        activeChat
+      );
+      if (!chatId) {
+        console.error("No chat found");
+        return;
+      }
+      setChatId(chatId);
+      const messages = await getMessages(chatId);
+      setChats(messages);
+    };
+    fetchChat();
+  }, [activeChat]);
+
+  useEffect(() => {
+    if (!chatId) return;
+
+    // Subscribe to new messages in this chat
+    const channel = supabase
+      .channel("messages-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `chat_id=eq.${chatId}`,
+        },
+        (payload) => {
+          setChats((prev) => [...prev, payload.new as Message]);
+        }
+      )
+      .subscribe();
+
+    // Cleanup on unmount or chatId change
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chatId]);
+
+  const handleSendMessage = async (message: string) => {
+    const currentUserId = await supabase.auth.getUser();
+    if (!currentUserId.data.user) {
+      router.push("/login");
+      return;
+    }
+    const { error } = await sendMessage({
+      chat_id: chatId,
+      sender_id: currentUserId.data.user.id,
+      content: message,
+    });
+    if (error) {
+      console.error("Error sending message:", error);
+      return;
+    }
+    setChats((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        chat_id: chatId,
+        sender_id: currentUserId.data.user!.id,
+        content: message,
+        created_at: new Date().toISOString(),
+      },
+    ]);
+  };
   return (
     <div className="flex-1 flex flex-col items-center justify-start bg-gray-100 min-h-0">
       <ChatHeader />
@@ -52,7 +117,7 @@ const ChatArea: React.FC = () => {
               ))}
             </div>
           </div>
-          <ChatInput onSend={setChats} />
+          <ChatInput onSend={handleSendMessage} />
         </div>
       </div>
     </div>
