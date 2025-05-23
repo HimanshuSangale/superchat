@@ -12,6 +12,14 @@ import {
 import { RiContactsBookFill } from "react-icons/ri";
 import { MdPermMedia, MdOutlineChecklist } from "react-icons/md";
 import Image from "next/image";
+import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
+import { TfiReload } from "react-icons/tfi";
+import { FiEdit3 } from "react-icons/fi";
+import { VscListSelection, VscMention } from "react-icons/vsc";
+import { CiBoxList } from "react-icons/ci";
+import { SiHubspot } from "react-icons/si";
+import { IoIosPeople } from "react-icons/io";
+import { PiListPlusBold } from "react-icons/pi";
 
 type NavItem = {
   key: string;
@@ -20,77 +28,57 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { key: "home", icon: <AiFillHome className="text-2xl" />, label: "Home" },
-  { key: "chat", icon: <BsChatDotsFill className="text-2xl" />, label: "Chat" },
-  { key: "ticket", icon: <IoTicket className="text-2xl" />, label: "Tickets" },
+  {
+    key: "home",
+    icon: <TbLayoutSidebarRightExpandFilled className="text-2xl" />,
+    label: "Home",
+  },
+  { key: "chat", icon: <TfiReload className="text-2xl" />, label: "Chat" },
+  { key: "ticket", icon: <FiEdit3 className="text-2xl" />, label: "Tickets" },
   {
     key: "chart",
-    icon: <AiOutlineLineChart className="text-2xl" />,
+    icon: <VscListSelection className="text-2xl" />,
     label: "Analytics",
   },
-  { key: "list", icon: <FaList className="text-2xl" />, label: "List" },
+  { key: "list", icon: <CiBoxList className="text-2xl" />, label: "List" },
   {
     key: "bullhorn",
-    icon: <FaBullhorn className="text-2xl" />,
+    icon: <SiHubspot className="text-2xl" />,
     label: "Announcements",
   },
-  { key: "tree", icon: <TbBinaryTree2 className="text-2xl" />, label: "Tree" },
+  { key: "tree", icon: <IoIosPeople className="text-2xl" />, label: "Tree" },
   {
     key: "contacts",
-    icon: <RiContactsBookFill className="text-2xl" />,
+    icon: <VscMention className="text-2xl" />,
     label: "Contacts",
   },
   { key: "media", icon: <MdPermMedia className="text-2xl" />, label: "Media" },
   {
     key: "checklist",
-    icon: <MdOutlineChecklist className="text-2xl" />,
+    icon: <PiListPlusBold className="text-2xl" />,
     label: "Checklist",
-  },
-  {
-    key: "settings",
-    icon: <BsFillGearFill className="text-2xl" />,
-    label: "Settings",
-  },
-  {
-    key: "stars",
-    icon: <TbStarsFilled className="text-2xl" />,
-    label: "Favorites",
-  },
-  {
-    key: "expand",
-    icon: <TbLayoutSidebarLeftExpandFilled className="text-2xl" />,
-    label: "Expand",
   },
 ];
 
-const Sidebar = () => {
+const ChatIntegration = () => {
   const [active, setActive] = useState<string>("home");
 
   // Helper to determine if a divider should be rendered after a given index
   const dividerAfter = [0, 3, 6, 8, 9, 10];
 
   return (
-    <div className="w-16 h-screen p-3 border-r border-gray-200 bg-white flex flex-col items-center">
+    <div className="w-16 p-3 border-l border-gray-200 bg-white flex flex-col items-center">
       <ul className="w-full h-full flex flex-col items-center justify-start">
-        <li className="mb-4">
-          <Image
-            width={30}
-            height={30}
-            src="/logo.png"
-            alt="Logo"
-            className="w-10 h-10 rounded-full"
-          />
-        </li>
         {navItems.map((item, idx) => (
           <React.Fragment key={item.key}>
             <li
               className={`px-3 py-2 my-1 rounded-xl ${
-                item.key === "stars" ? "mt-auto" : ""
-              } ${active === item.key ? "bg-gray-200" : ""}`}
+                active === item.key ? "bg-gray-200" : ""
+              }`}
             >
               <button
                 aria-label={item.label}
-                className={`flex items-center justify-center w-full text-gray-500 hover:text-green-700 transition-colors focus:outline-none cursor-pointer ${
+                className={`flex items-center justify-center w-full text-gray-400 hover:text-green-700 transition-colors focus:outline-none cursor-pointer ${
                   active === item.key ? "text-green-700" : ""
                 }`}
                 onClick={() => setActive(item.key)}
@@ -109,4 +97,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default ChatIntegration;
