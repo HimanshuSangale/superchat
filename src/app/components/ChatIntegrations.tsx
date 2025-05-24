@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { MdPermMedia } from "react-icons/md";
 import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 import { TfiReload } from "react-icons/tfi";
@@ -50,18 +50,15 @@ const navItems: NavItem[] = [
 ];
 
 const ChatIntegration = () => {
-  const [active, setActive] = useState<string>("home");
-
   return (
     <div className="w-16 p-3 pt-8 border-l border-gray-200 bg-white flex flex-col items-center">
       <ul className="w-full h-full flex flex-col items-center justify-start gap-3">
-        {navItems.map((item, idx) => (
+        {navItems.map((item) => (
           <React.Fragment key={item.key}>
             <li className={`px-3 py-2 my-1 rounded-xl`}>
               <button
                 aria-label={item.label}
                 className={`flex text-lg items-center justify-center w-full text-gray-400 hover:text-green-700 transition-colors focus:outline-none cursor-pointer `}
-                onClick={() => setActive(item.key)}
                 type="button"
               >
                 {item.icon}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AiFillHome, AiOutlineLineChart } from "react-icons/ai";
 import { BsChatDotsFill, BsFillGearFill } from "react-icons/bs";
 import { IoTicket } from "react-icons/io5";
-import { FaB, FaList, FaBullhorn } from "react-icons/fa6";
+import { FaList, FaBullhorn } from "react-icons/fa6";
 import {
   TbBinaryTree2,
   TbStarsFilled,

@@ -197,7 +197,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ activeChat }) => {
     };
 
     fetchChat();
-  }, [activeChat]);
+  }, [activeChat, router]);
 
   // Real-time message subscription
   useEffect(() => {
@@ -272,7 +272,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ activeChat }) => {
             }}
             onScroll={handleScroll}
           >
-            {groupedChats.map((msg, index) => {
+            {groupedChats.map((msg) => {
               const isCurrentUser = msg.sender_id === currentUserProfile?.id;
 
               return (

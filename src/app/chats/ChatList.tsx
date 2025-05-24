@@ -1,7 +1,7 @@
 "use client";
 import Chat from "@/components/Chat";
 import { Profile } from "@/types/supabase";
-import React, { useState } from "react";
+import React from "react";
 
 type ChatListProps = {
   setActiveChat: React.Dispatch<React.SetStateAction<string>>;

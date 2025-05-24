@@ -5,7 +5,7 @@ import Sidebar from "../components/sidebar";
 import Header from "../components/Header";
 import ChatIntegration from "../components/ChatIntegrations";
 import { RiFolderDownloadFill } from "react-icons/ri";
-import { IoSearch, IoSend, IoFilterSharp } from "react-icons/io5";
+import { IoSearch, IoFilterSharp } from "react-icons/io5";
 import { getAllProfiles } from "@/api/profile";
 import { ImSpinner8 } from "react-icons/im";
 
@@ -65,7 +65,7 @@ const Chats = () => {
       }
     };
     handleAuthChange();
-  }, []);
+  }, [router]);
 
   return (
     <div className="w-full flex">
