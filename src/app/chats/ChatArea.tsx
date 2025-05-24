@@ -255,7 +255,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ activeChat }) => {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: "url('/background.jpg')",
+              backgroundImage: "url('/bg.jpg')",
               backgroundSize: "cover",
               backgroundPosition: "center",
               opacity: 0.5,
