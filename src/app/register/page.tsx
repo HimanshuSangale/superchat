@@ -1,18 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { createProfile } from "@/api/profile";
+import { ImSpinner8 } from "react-icons/im";
 
 export default function RegisterPage() {
   const router = useRouter();
-
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        router.replace("/chats");
+      } else {
+        setCheckingAuth(false);
+      }
+    };
+    checkUser();
+  }, [router]);
 
   const handleRegister = async () => {
     setLoading(true);
@@ -37,7 +51,8 @@ export default function RegisterPage() {
       const { error: profileError } = await createProfile(
         data.user.id,
         fullName,
-        email
+        email,
+        phone // pass phone here
       );
       if (profileError) {
         alert("Profile creation failed: " + profileError.message);
@@ -62,6 +77,14 @@ export default function RegisterPage() {
 
     setLoading(false);
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <ImSpinner8 className="animate-spin text-2xl text-green-500" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -99,13 +122,27 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           />
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
 
           <button
             onClick={handleRegister}
             disabled={loading}
-            className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+            className="w-full py-2 bg-green-500 text-white rounded hover:bg-green-600 transition disabled:opacity-60 flex items-center justify-center"
           >
-            {loading ? "Creating..." : "Sign Up"}
+            {loading ? (
+              <>
+                <ImSpinner8 className="animate-spin mr-2" />
+                Creating...
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </div>
 

@@ -20,45 +20,45 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { key: "home", icon: <AiFillHome className="text-2xl" />, label: "Home" },
-  { key: "chat", icon: <BsChatDotsFill className="text-2xl" />, label: "Chat" },
-  { key: "ticket", icon: <IoTicket className="text-2xl" />, label: "Tickets" },
+  { key: "home", icon: <AiFillHome />, label: "Home" },
+  { key: "chat", icon: <BsChatDotsFill />, label: "Chat" },
+  { key: "ticket", icon: <IoTicket />, label: "Tickets" },
   {
     key: "chart",
-    icon: <AiOutlineLineChart className="text-2xl" />,
+    icon: <AiOutlineLineChart />,
     label: "Analytics",
   },
-  { key: "list", icon: <FaList className="text-2xl" />, label: "List" },
+  { key: "list", icon: <FaList />, label: "List" },
   {
     key: "bullhorn",
-    icon: <FaBullhorn className="text-2xl" />,
+    icon: <FaBullhorn />,
     label: "Announcements",
   },
-  { key: "tree", icon: <TbBinaryTree2 className="text-2xl" />, label: "Tree" },
+  { key: "tree", icon: <TbBinaryTree2 />, label: "Tree" },
   {
     key: "contacts",
-    icon: <RiContactsBookFill className="text-2xl" />,
+    icon: <RiContactsBookFill />,
     label: "Contacts",
   },
-  { key: "media", icon: <MdPermMedia className="text-2xl" />, label: "Media" },
+  { key: "media", icon: <MdPermMedia />, label: "Media" },
   {
     key: "checklist",
-    icon: <MdOutlineChecklist className="text-2xl" />,
+    icon: <MdOutlineChecklist />,
     label: "Checklist",
   },
   {
     key: "settings",
-    icon: <BsFillGearFill className="text-2xl" />,
+    icon: <BsFillGearFill />,
     label: "Settings",
   },
   {
     key: "stars",
-    icon: <TbStarsFilled className="text-2xl" />,
+    icon: <TbStarsFilled />,
     label: "Favorites",
   },
   {
     key: "expand",
-    icon: <TbLayoutSidebarLeftExpandFilled className="text-2xl" />,
+    icon: <TbLayoutSidebarLeftExpandFilled />,
     label: "Expand",
   },
 ];
@@ -67,7 +67,7 @@ const Sidebar = () => {
   const [active, setActive] = useState<string>("home");
 
   // Helper to determine if a divider should be rendered after a given index
-  const dividerAfter = [0, 3, 6, 8, 9, 10];
+  const dividerAfter = [0, 3, 6, 8];
 
   return (
     <div className="w-16 h-screen p-3 border-r border-gray-200 bg-white flex flex-col items-center">
@@ -84,13 +84,13 @@ const Sidebar = () => {
         {navItems.map((item, idx) => (
           <React.Fragment key={item.key}>
             <li
-              className={`px-3 py-2 my-1 rounded-xl ${
+              className={`p-2 mb-1 rounded-md ${
                 item.key === "stars" ? "mt-auto" : ""
               } ${active === item.key ? "bg-gray-200" : ""}`}
             >
               <button
                 aria-label={item.label}
-                className={`flex items-center justify-center w-full text-gray-500 hover:text-green-700 transition-colors focus:outline-none cursor-pointer ${
+                className={`text-lg flex items-center justify-center w-full text-gray-500 hover:text-green-700 transition-colors focus:outline-none cursor-pointer ${
                   active === item.key ? "text-green-700" : ""
                 }`}
                 onClick={() => setActive(item.key)}

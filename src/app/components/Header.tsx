@@ -4,6 +4,8 @@ import { BsChatDotsFill, BsChevronExpand, BsStars } from "react-icons/bs";
 import { LuRefreshCcwDot, LuCircleHelp } from "react-icons/lu";
 import { MdInstallDesktop } from "react-icons/md";
 import { IoNotificationsOffSharp, IoListOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 type HeaderAction = {
   key: string;
@@ -57,6 +59,12 @@ const headerActions: HeaderAction[] = [
 
 const Header = () => {
   const [active, setActive] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   return (
     <div className="h-14 bg-white text-gray-500 p-4 flex items-center border-b border-gray-200">
@@ -65,14 +73,17 @@ const Header = () => {
         Chat
       </h1>
       <div className="ml-auto flex items-center gap-3">
-        {headerActions.map((action) => (
+        {headerActions.map((action, idx) => (
           <button
             key={action.key}
             className={`flex gap-2 items-center px-4 py-1 border border-solid border-gray-200 hover:bg-gray-100 rounded text-sm shadow-sm focus:outline-none ${
               active === action.key ? "bg-gray-200" : ""
             }`}
             aria-label={action.label}
-            onClick={() => setActive(action.key)}
+            onClick={() => {
+              setActive(action.key);
+              if (idx === headerActions.length - 1) handleLogout();
+            }}
             type="button"
           >
             {action.icon}

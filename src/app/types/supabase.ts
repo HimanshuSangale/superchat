@@ -2,6 +2,7 @@ export interface Profile {
   id: string;
   full_name: string;
   email: string;
+  phone_number?: string | null;
   avatar_url: string | null;
   created_at: string;
 }

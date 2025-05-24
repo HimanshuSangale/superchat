@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Badge from "./Badge";
 import { IoCallOutline } from "react-icons/io5";
 import Avatar from "./Avatar";
@@ -19,12 +18,11 @@ const Chat = ({ title, description, onClick, isActive }: ChatProps) => {
       }`}
       onClick={onClick}
     >
-      <Avatar
-        src="/logo.png"
-        alt="Chat"
-        size="lg"
-        className="rounded-full w-12 h-12"
-      />
+      <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mb-1 flex-shrink-0">
+        <span className="text-lg font-semibold text-gray-600">
+          {title?.charAt(0)?.toUpperCase() || "?"}
+        </span>
+      </div>
       <div className="flex items-start justify-between w-full">
         <div className="flex flex-col w-full">
           <div className="flex justify-between">

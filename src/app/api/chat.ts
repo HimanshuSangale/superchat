@@ -94,12 +94,17 @@ export async function getOrCreateChatId(
   userId2: string
 ): Promise<string> {
   let chatId = await getCommonChatId(userId1, userId2);
-  console.log("chatId", chatId);
-  console.log("chatIds", userId1, userId2);
-  if (!chatId) {
+  if (chatId) return chatId;
+
+  try {
     chatId = await createChatWithMembers(userId1, userId2);
+    return chatId;
+  } catch (e) {
+    // If error is due to duplicate, try to get the chat again
+    chatId = await getCommonChatId(userId1, userId2);
+    if (chatId) return chatId;
+    throw e;
   }
-  return chatId;
 }
 
 // Get all chats for a user

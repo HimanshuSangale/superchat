@@ -16,9 +16,12 @@ export async function updateProfile(id: string, updates: Partial<Profile>) {
 export async function createProfile(
   id: string,
   full_name: string,
-  email: string
+  email: string,
+  phone_number?: string
 ) {
-  return supabase.from("profiles").insert([{ id, full_name, email }]);
+  return supabase
+    .from("profiles")
+    .insert([{ id, full_name, email, phone_number }]);
 }
 export async function getAllProfiles(): Promise<Profile[]> {
   const { data: userData } = await supabase.auth.getUser();

@@ -3,16 +3,25 @@ import Avatar from "./Avatar";
 import { IoSearch } from "react-icons/io5";
 import { BsStars } from "react-icons/bs";
 
-const ChatHeader = () => {
+type ChatHeaderProps = {
+  title: string;
+  description?: string;
+};
+
+const ChatHeader: React.FC<ChatHeaderProps> = ({ title, description }) => {
   return (
     // Header component for the chat application
     <div className="flex w-full items-center justify-between p-2 bg-white border-b border-gray-200">
       <div className="flex items-center gap-3">
-        <Avatar src="/logo.png" alt="Chat" size="md" />
+        <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mb-1 flex-shrink-0">
+          <span className="text-lg font-semibold text-gray-600">
+            {title?.charAt(0)?.toUpperCase() || "?"}
+          </span>
+        </div>
         <div className="flex flex-col w-full">
-          <h3 className="text-base font-bold text-gray-900">Chat Header</h3>
+          <h3 className="text-base font-bold text-gray-900">{title}</h3>
           <p className="text-sm font-base text-gray-400">
-            Rohan, Rohan, Rohan, Rohan, Rohan{" "}
+            {description || "Chatting with " + title}
           </p>
         </div>
       </div>

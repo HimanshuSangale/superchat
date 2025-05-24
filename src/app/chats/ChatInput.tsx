@@ -10,7 +10,7 @@ import { IoMdListBox } from "react-icons/io";
 import { FaMicrophone } from "react-icons/fa6";
 import Avatar from "../components/Avatar";
 import { BsChevronExpand } from "react-icons/bs";
-import { Message } from "@/types/supabase";
+
 type ChatInputProps = {
   onSend: (message: string) => void | Promise<void>;
 };
@@ -33,6 +33,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
           className="w-full focus:outline-none border-none"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          autoComplete="off"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
         />
         <IoSend
           className="text-green-700 cursor-pointer"
